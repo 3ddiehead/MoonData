@@ -8,8 +8,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 #CREATE FASTER SEARCH ALGORITHM DEPENDING ON LATITUDE + THE ~±28° RANGE OF THE MOON + THE ROUGH LENGTH OF TIME BETWEEN CROSSES DEPENDING ON ALTITUDE.
+#IN COSTA RICA AT 9.9°/-85.5°, IT IS ROUGHLY 17 DAYS BELOW and 11 DAYS ABOVE
+
+#DISPLAY WHETHER THE MOON IS CROSSING OVER N->S or S->N FOR ~±28° LATITUDE REGIONS
 
 #ADD OPTIONS FOR LOCATION OF THE HIGHEST ALTITUDE BY DATE AND TIME / CURRENT
+
+#COLLECT INFORMATION ON THE SPEED OF ALTITUDE RISING AND LOWERING
 
 file_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(file_path)
@@ -26,6 +31,7 @@ dt = datetime.datetime.now() + datetime.timedelta(days=-1)
 #Collect variables from user
 longitude = input("What is the longitude of the location in decimal? ")
 latitude = input("What is the latitude of the location? ")
+peaks = int(input("How many peaks would you like to read in advance? "))
 
 #Times, altitudes, and illumination percentage of closest approaches by the moon
 TAIs = []
@@ -36,7 +42,7 @@ this_TAI = ['NA','NA','NA']
 last_TAI = ['NA','NA','NA']
 
 #Loop until 10 culmination dates are found
-while len(TAIs) < 10:
+while len(TAIs) < peaks:
 	
 	#Generate the URL for mooncalc.org with latitude, longitude, day, and time
 	dtlist = dt.strftime("%Y-%m-%d-%H-%M").split("-")
