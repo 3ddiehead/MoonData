@@ -1,3 +1,5 @@
+import json
+import os
 from transformers import pipeline
 
 distilled_student_sentiment_classifier = pipeline(
@@ -5,17 +7,38 @@ distilled_student_sentiment_classifier = pipeline(
     top_k=4
 )
 
-sentences = [
-    'This is a movie.',
-    'Movies are awesome.',
-    "Eat at Valerie's Diner",
-    "remember the alamo",
-    'CONNKKT BIT.LY/H43242njnk99 >>>>><><<<<< CRUUUUWN',
-    'olha que coisa mais linda',
-    '我每天吃好吃的牛',
-    "This is the most beautiful thing, I hate it."
-]
+accepted_langs = [
+    "ar", #Arabic
+    "de", #German (Deutsch)
+    "en", #English
+    "es", #Spanish (Español)
+    "fr", #French
+    "hi", #Hindi
+    "id", #Indonesian
+    "it", #Italian
+    "ja", #Japanese
+    "ms", #Malay
+    "pt", #Portuguese
+    "zh"  #Chinese.Mandarin (Zhōngwén - 中文)
+    ]
 
-for sentence in sentences:
-    response = distilled_student_sentiment_classifier(sentence)
-    print(response)
+currdir = os.path.dirname(os.path.abspath(__file__))
+datadir = currdir+'/compiledData'
+
+output = []
+
+with open(datadir+'/'+os.listdir(datadir)[0],'r') as infile:
+    jstring = infile.read()
+    jobj = json.loads(jstring)
+
+    for itx, tweet in enumerate(jobj):
+        if tweet["lang"] in accepted_langs:
+            response = distilled_student_sentiment_classifier(tweet["text"])
+            tweet["sentiment"] = response
+            output.append(tweet)
+
+infile.close()
+
+with open(datadir+'/'+os.listdir(datadir)[0]+"_mod.json","w") as outfile:
+    outfile.write(json.dumps(output))
+outfile.close()

@@ -37,12 +37,8 @@ def decode_multiple_json(content):
 
 
 days = os.listdir(dirpath)
-print(days)
 
-
-for dayitx, daypath in enumerate(days.reverse()):
-
-    if dayitx>10: continue
+for daypath in days:
     if len(daypath) > 2: continue
 
     with open(datadir+"/"+daypath+".json","w") as compfile:
